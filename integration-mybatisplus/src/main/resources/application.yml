@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mbdb?serverTimeZone=Asia/Shanghai
+
+mybatis-plus:
+  type-aliases-package: com.wei.entity
+  mapper-locations: classpath:mapper/*Mapper.xml
