@@ -7,9 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="integration-mybatisplus" />
-        <module name="integration-jpa" />
+        <module name="integration-scheduled" />
         <module name="integration-druid" />
+        <module name="integration-rabbitmq" />
+        <module name="integration-mail" />
         <module name="integration-c3p0" />
+        <module name="integration-jpa" />
+        <module name="integration-actuator" />
         <module name="integration-activemq" />
       </profile>
     </annotationProcessing>

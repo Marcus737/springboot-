@@ -14,6 +14,10 @@
         <module>integration-mybatisplus</module>
         <module>integration-jpa</module>
         <module>integration-activemq</module>
+        <module>integration-rabbitmq</module>
+        <module>integration-mail</module>
+        <module>integration-scheduled</module>
+        <module>integration-actuator</module>
     </modules>
 
     <properties>
