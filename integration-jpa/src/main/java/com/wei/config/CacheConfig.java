@@ -1,5 +1,9 @@
 package com.wei.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.*;
@@ -43,13 +47,26 @@ public class CacheConfig extends CachingConfigurerSupport {
     public RedisTemplate<Object, Object> redisTemplate() {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
-        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+        ObjectMapper om = new ObjectMapper();
+        //忽略未知字段
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //属性为NULL不被序列化
+        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        //假如没有这个配置,redis存储数据时不存储类型,反序列化时会默认将其数据存储到map
+        om.activateDefaultTyping(
+                om.getPolymorphicTypeValidator(),//多态校验分析
+                ObjectMapper.DefaultTyping.NON_FINAL,//激活序列化类型存储,类不能使用final修饰
+                JsonTypeInfo.As.PROPERTY);
+
+        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer(om);
         redisTemplate.setKeySerializer(genericJackson2JsonRedisSerializer);
         redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
         return redisTemplate;
     }
+
 
     @Override
     public CacheResolver cacheResolver() {
